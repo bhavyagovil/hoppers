@@ -25,8 +25,6 @@ pygame.init()
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption(WINDOW_TITLE)
 
-pygame.mixer.music.load('music_loop.wav')
-pygame.mixer.music.play(-1)
 collision_sound = pygame.mixer.Sound("impact.wav")
 
 class Bunny(pygame.sprite.Sprite):
@@ -138,6 +136,9 @@ bunny = Bunny(7 * GRID_TILE_SIZE, WINDOW_HEIGHT - GRID_TILE_SIZE)
 
 def main() -> None:
     clock = pygame.time.Clock()
+    
+    pygame.mixer.music.load('music_loop.wav')
+    pygame.mixer.music.play(-1)
 
     background = Background()
 
