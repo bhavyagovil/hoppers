@@ -26,15 +26,16 @@ pygame.mixer.init()
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption(WINDOW_TITLE)
 
-DEATH_SOUND = pygame.mixer.Sound("./sounds/impact.wav")
-LOSE_SOUND = pygame.mixer.Sound("./sounds/loosing_sound.wav")
-MUSIC = pygame.mixer.Sound("./sounds/music_loop.wav")
+DEATH_SOUND = pygame.mixer.Sound("impact.wav")
+LOSE_SOUND = pygame.mixer.Sound("loosing_sound.wav")
+MUSIC = pygame.mixer.Sound("music_loop.wav")
 
 class Bunny(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.Surface((GRID_TILE_SIZE, GRID_TILE_SIZE))
-        self.image.fill(RED)
+        self.image = pygame.image.load("rabbit.png")
+        self.image = pygame.transform.scale(self.image, (GRID_TILE_SIZE, GRID_TILE_SIZE))
+        # self.image.fill(RED)
         self.rect = self.image.get_rect(topleft=(x, y))
 
         self.start_pos = (x, y)
@@ -73,7 +74,7 @@ class Fox(pygame.sprite.Sprite):
         self.start_pos = (x, y)
         self.end_pos = (end_x, end_y)
 
-        self.fox = './images/fox.png'
+        self.fox = 'fox.png'
         self.image = pygame.image.load(self.fox).convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
@@ -98,7 +99,6 @@ class Fox(pygame.sprite.Sprite):
         elif self.rect.right < 0 and self.dir == WEST:
             self.rect.x = self.start_pos[0]
 
-
 class Adalovelace(pygame.sprite.Sprite):
     def __init__(self, spd, x, y, end_x, end_y, direction):
         super().__init__(all_sprites, obstacles)
@@ -110,7 +110,7 @@ class Adalovelace(pygame.sprite.Sprite):
         self.start_pos = (x, y)
         self.end_pos = (end_x, end_y)
 
-        self.ada = './images/ada.png'
+        self.ada = 'ada.png'
         self.image = pygame.image.load(self.ada).convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
@@ -138,7 +138,7 @@ class Adalovelace(pygame.sprite.Sprite):
 class Background(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__(all_sprites)
-        self.image = pygame.image.load('./images/background.jpg')
+        self.image = pygame.image.load("background.jpg")
         self.rect = self.image.get_rect()
 
         self.start_rect = pygame.Rect(0, WINDOW_HEIGHT - GRID_TILE_SIZE, WINDOW_WIDTH, 2 * GRID_TILE_SIZE)
@@ -146,6 +146,9 @@ class Background(pygame.sprite.Sprite):
         self.central_rect = pygame.Rect(0, WINDOW_HEIGHT - 8 * GRID_TILE_SIZE, WINDOW_WIDTH, GRID_TILE_SIZE)
         self.road2_rect = pygame.Rect(0, 2 * GRID_TILE_SIZE, WINDOW_WIDTH, 5 * GRID_TILE_SIZE)
         self.finish_rect = pygame.Rect(0, 0, WINDOW_WIDTH, 2 * GRID_TILE_SIZE)
+
+        for i in range(5):
+            Tree(i, self.central_rect.y - GRID_TILE_SIZE, "tree.png")
 
     def create_obstacles(self, level):
         for obs in obstacles:
@@ -198,7 +201,7 @@ class Background(pygame.sprite.Sprite):
                             end_x = 0 - abs(x)
 
                         end_y = y
-                        fox = Fox(speed, x, y, end_x, end_y, direction)
+                        ada = Fox(speed, x, y, end_x, end_y, direction)
 
                     else: # direction == WEST
                         x = WINDOW_WIDTH + j * GRID_TILE_SIZE
@@ -210,7 +213,7 @@ class Background(pygame.sprite.Sprite):
                             end_x = 0 - abs(x)
 
                         end_y = y
-                        fox = Fox(speed, x, y, end_x, end_y, direction)
+                        ada = Fox(speed, x, y, end_x, end_y, direction)
 
 levels = [[[1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0],
@@ -224,10 +227,18 @@ levels = [[[1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0],
            [0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0]]]
 
+class Tree(pygame.sprite.Sprite):
+    def __init__(self, i, y, image_path):
+        super().__init__(all_sprites)
+        self.image = pygame.image.load(image_path).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (2 * GRID_TILE_SIZE, 2 * GRID_TILE_SIZE))
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.rect.topleft = (GRID_TILE_SIZE * 3 * i + GRID_TILE_SIZE // 2, y)
+
 class Carrot(pygame.sprite.Sprite):
     def __init__(self, i, blink_interval):
         super().__init__(all_sprites, carrots)
-        self.carrot = './images/carrot.png'
+        self.carrot = 'carrot.png'
         self.loaded_image = pygame.image.load(self.carrot).convert_alpha()
         self.loaded_image = pygame.transform.scale(self.loaded_image, (2*GRID_TILE_SIZE, 2*GRID_TILE_SIZE))
         self.invisible_image = pygame.Surface((2 * GRID_TILE_SIZE, 2 * GRID_TILE_SIZE), pygame.SRCALPHA)
@@ -271,6 +282,7 @@ bunny = Bunny(7 * GRID_TILE_SIZE, WINDOW_HEIGHT - GRID_TILE_SIZE)
 
 def main() -> None:
     level = 0
+    score = 0
     clock = pygame.time.Clock()
 
     MUSIC.play(loops=-1)
@@ -287,8 +299,12 @@ def main() -> None:
     running = True
     game_over = False
 
+    time_taken = 0
+
     while running:
         dt = clock.tick(60) / 1000
+
+        time_taken += 1
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -307,6 +323,7 @@ def main() -> None:
         if not game_over:
             carrots_hit = pygame.sprite.spritecollide(bunny, carrots, False)
             for carrot in carrots_hit:
+                score += 15 * len(carrots) * (level + 1)
                 carrot.kill()
                 bunny.rect.topleft = bunny.start_pos
 
@@ -333,6 +350,7 @@ def main() -> None:
                 draw_text_center("Game Over!", (WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2), RED, 64)
 
             draw_text_bottomleft("Lives: %s" % bunny.lives, (5, WINDOW_HEIGHT - 5), RED, 36)
+            draw_text_center("%s" % score, (WINDOW_WIDTH // 2 + 4 * GRID_TILE_SIZE, WINDOW_HEIGHT - GRID_TILE_SIZE // 2), RED, 64)
 
             pygame.display.flip()
 
