@@ -23,7 +23,17 @@ class Log(pygame.sprite.Sprite):
         log_collisions = pygame.sprite.spritecollide(self, obstacles, False)
         for log in log_collisions:
             if isinstance(log, Log):
-                self.rect.x += log.spd * dt  # Move with the log
+                self.rect.x += log.spd * dt  # Move with the log 
+                
+ #selecting the log lanes
+  log_lane_y = self.road1_rect.top + 2 * GRID_TILE_SIZE  # Set the lane for the logs
+        direction = EAST
+        speed = random.randint(1, 3)
+        for j in range(3): 
+            x = 0 - (j * GRID_TILE_SIZE * 5) if direction == EAST else WINDOW_WIDTH + j * GRID_TILE_SIZE * 5
+            Log(speed, x, log_lane_y, direction)               
+                
+
 
 
             
