@@ -9,10 +9,10 @@ Class Obstacle:
         self.speed = speed
         self.color = color
 
-    def move(self):
+    def move(self,screen_width):
         self.x += self.speed
 
-        if self.x > SCREEN_WIDTH:
+        if self.x > screen_width:
             self.x = -self.width
 
     def draw(self, screen):
