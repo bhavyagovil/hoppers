@@ -18,3 +18,13 @@ Class Obstacle:
     def draw(self, screen):
        pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
 
+class Foxes(Obstacle):
+    def __init__(self, x, y, speed, image_path):
+        self.image = pygame.image.load(image_path)  
+        self.image = pygame.transform.scale(self.image, (80, 40)) 
+        width, height = self.image.get_size()
+        super().__init__(x, y, width, height, speed, None)
+    
+    
+    def draw(self,screen):
+        screen.blit(self.image, (self.x, self.y))
