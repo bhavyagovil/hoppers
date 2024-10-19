@@ -7,11 +7,11 @@ class Tree(pygame.sprite.Sprite):
         self.rect.topleft = (x, y) 
         
 trees = [
-    Tree(0, 0, 'tree.png', all_sprites),
-    Tree(0, 0, 'tree.png', all_sprites),
-    Tree(0, 0, 'tree.png', all_sprites),
-    Tree(0, 0, 'tree.png', all_sprites),
-    Tree(0, 0, 'tree.png', all_sprites)
+    Tree(0, 0, 'tree_nobg.png', all_sprites),
+    Tree(0, 0, 'tree_nobg.png', all_sprites),
+    Tree(0, 0, 'tree_nobg.png', all_sprites),
+    Tree(0, 0, 'tree_nobg.png', all_sprites),
+    Tree(0, 0, 'tree_nobg.png', all_sprites)
 ]
 
 for tree in trees:
