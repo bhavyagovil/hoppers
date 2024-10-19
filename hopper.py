@@ -117,10 +117,18 @@ class Background(pygame.sprite.Sprite):
             ada = Adalovelace(spd, x, y, dir)
             obstacles.add(ada)
 
+class Carrot(pygame.sprite.Sprite):
+    def __init__(self, i, *groups):
+        super().__init__(*groups)
+        self.carrot = 'carrot.png'
+        self.image = pygame.image.load(self.carrot).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (2*GRID_TILE_SIZE, 2*GRID_TILE_SIZE))
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (GRID_TILE_SIZE * 3 * i + GRID_TILE_SIZE/2, 0)
 
 all_sprites = pygame.sprite.Group() # every object here for rendering please
 obstacles = pygame.sprite.Group() # only obstacles so easy to detect if bunny is dead
-finish_boxes = pygame.sprite.Group() # only things that indicate a win
+carrots = pygame.sprite.Group() # only things that indicate a win
 
 bunny = Bunny(7 * GRID_TILE_SIZE, WINDOW_HEIGHT - GRID_TILE_SIZE)
 
@@ -132,6 +140,10 @@ def main() -> None:
     background.create_obstacles(1)
 
     all_sprites.add(bunny)
+    
+    for i in range(5):
+        all_sprites.add(Carrot(i))
+        carrots.add(Carrot(i))
 
     running = True
     while running:
