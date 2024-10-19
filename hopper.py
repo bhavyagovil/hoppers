@@ -95,9 +95,9 @@ class Fox(pygame.sprite.Sprite):
         #         self.rect.topleft = self.start_pos
 
         if self.rect.left > WINDOW_WIDTH and self.dir == EAST:
-            self.rect.x = self.start_pos[0]
+            self.rect.x = -GRID_TILE_SIZE
         elif self.rect.right < 0 and self.dir == WEST:
-            self.rect.x = self.start_pos[0]
+            self.rect.x = WINDOW_WIDTH
 
 class Adalovelace(pygame.sprite.Sprite):
     def __init__(self, spd, x, y, end_x, end_y, direction):
@@ -131,9 +131,9 @@ class Adalovelace(pygame.sprite.Sprite):
         #         self.rect.topleft = self.start_pos
 
         if self.rect.left > WINDOW_WIDTH and self.dir == EAST:
-            self.rect.x = self.start_pos[0]
+            self.rect.x = -GRID_TILE_SIZE
         elif self.rect.right < 0 and self.dir == WEST:
-            self.rect.x = self.start_pos[0]
+            self.rect.x = WINDOW_WIDTH
 
 class Background(pygame.sprite.Sprite):
     def __init__(self):
@@ -147,10 +147,12 @@ class Background(pygame.sprite.Sprite):
         self.road2_rect = pygame.Rect(0, 2 * GRID_TILE_SIZE, WINDOW_WIDTH, 5 * GRID_TILE_SIZE)
         self.finish_rect = pygame.Rect(0, 0, WINDOW_WIDTH, 2 * GRID_TILE_SIZE)
 
-        for i in range(5):
-            Tree(i, self.central_rect.y - GRID_TILE_SIZE, "./images/tree.png")
-
     def create_obstacles(self, level):
+        speed_mul = 1
+        if level >= 2:
+            speed_mul = level
+            level = 2
+
         for obs in obstacles:
             obs.kill()
         obstacles.empty()
@@ -158,11 +160,11 @@ class Background(pygame.sprite.Sprite):
         for i in range(5): # road 1, 5 lanes
             direction = EAST if i % 2 == 0 else WEST
             lane_layout = levels[level][i]
-            speed = random.randint(1, 5)
+            speed = random.randint(1, 5) * speed_mul
             for j in range(15):
                 if lane_layout[j] == 1:
                     if direction == EAST:
-                        x = 0 - (j * GRID_TILE_SIZE)
+                        x = 0 - (j * GRID_TILE_SIZE) - GRID_TILE_SIZE
                         y = self.road1_rect.top + i * GRID_TILE_SIZE
 
                         if direction == EAST:
@@ -192,7 +194,7 @@ class Background(pygame.sprite.Sprite):
             for j in range(15):
                 if lane_layout[j] == 1:
                     if direction == EAST:
-                        x = 0 - (j * GRID_TILE_SIZE)
+                        x = 0 - (j * GRID_TILE_SIZE) - GRID_TILE_SIZE
                         y = self.road2_rect.top + i * GRID_TILE_SIZE
 
                         if direction == EAST:
@@ -216,9 +218,9 @@ class Background(pygame.sprite.Sprite):
                         ada = Fox(speed, x, y, end_x, end_y, direction)
 
 levels = [[[1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0],
+           [0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0],
+           [0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
            [0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
 
           [[1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
@@ -292,7 +294,10 @@ def main() -> None:
     background.create_obstacles(level)
 
     for i in range(5):
-        carrots.add(Carrot(i, 800))
+        Tree(i, background.central_rect.y - GRID_TILE_SIZE, "./images/tree.png")
+
+    for i in range(5):
+        carrots.add(Carrot(i, 200))
 
     all_sprites.add(bunny)
 
