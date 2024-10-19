@@ -2,7 +2,7 @@ import pygame
 class Carrot(pygame.sprite.Sprite):
     def __init__(self, i, blink_interval, *groups):
         super().__init__(*groups)
-        self.carrot = 'carrot.png'
+        self.carrot = './images/carrot.png'
         self.image = pygame.image.load(self.carrot).convert_alpha()
         self.image = pygame.transform.scale(self.image, (2*GRID_TILE_SIZE, 2*GRID_TILE_SIZE))
         self.rect = self.image.get_rect()
