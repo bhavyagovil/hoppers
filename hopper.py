@@ -27,6 +27,7 @@ pygame.display.set_caption(WINDOW_TITLE)
 
 pygame.mixer.music.load('music_loop.wav')
 pygame.mixer.music.play(-1)
+collision_sound = pygame.mixer.Sound("impact.wav")
 
 class Bunny(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -168,6 +169,8 @@ def main() -> None:
 
         # check if bunny dead :(
         if pygame.sprite.spritecollideany(bunny, obstacles):
+            pygame.mixer.Sound.play(collision_sound)
+            pygame.mixer.music.stop()
             print("dead")
 
         window.fill(WHITE)
