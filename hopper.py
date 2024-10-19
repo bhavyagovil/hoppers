@@ -25,6 +25,9 @@ pygame.init()
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption(WINDOW_TITLE)
 
+pygame.mixer.music.load('music_loop.wav')
+pygame.mixer.music.play(-1)
+
 class Bunny(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
